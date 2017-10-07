@@ -2,7 +2,7 @@ package application;
 
 
 
-import environment.Card;
+import environment.Map;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -20,7 +20,7 @@ public class MainApp extends Application {
         primaryStage.setTitle(Settings.APP_NAME);
         primaryStage.setScene(scene);
         primaryStage.show();
-        Card myCard = new Card();
+        Map myCard = new Map();
         root.getChildren().add(myCard);
         myCard.showCard();
 
