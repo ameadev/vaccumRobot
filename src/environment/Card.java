@@ -12,10 +12,11 @@ public class Card extends Parent  {
 	
 	public void showCard()
 	{
-		int j = 0;
-		for(int i = 0; i < 100; i++)
+		
+		for(int i = 0; i < 10; i++)
 		{
-			if (j == 10) { j = 0; }
+			for(int j = 0; j < 10; j++)
+			{
 			Rectangle room = new Rectangle(Settings.W_WIDTH/10, Settings.W_HEIGHT/10);
 			if(i < 10) { room.setX(0.0);}
 			else if (i < 20){room.setX(Settings.W_WIDTH/10);}
@@ -44,8 +45,8 @@ public class Card extends Parent  {
 		    diamond.setFill(Settings.COLOR_LIST[new Random().nextInt(Settings.COLOR_LIST.length)]);
 		    this.getChildren().add(dust);
 		    this.getChildren().add(diamond);
-		    
-			j++;				
+			}
+							
 		}
 	} 
 }
