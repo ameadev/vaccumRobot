@@ -1,5 +1,9 @@
 package agent;
 
-public class DrawUp extends Effector {
+import environment.Manor;
 
+public class DrawUp extends Effector {
+	public void doAction () {
+		//Manor drawUp = delContent();
+	}
 }
