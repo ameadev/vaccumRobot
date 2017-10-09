@@ -32,8 +32,14 @@ public class Manor extends Parent  {
 		Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(Settings.ENV_DELAY), ev -> {
 			int lineIndex = new Random().nextInt(Settings.LINE_NUMBER); // line random choice
 			int colIndex = new Random().nextInt(Settings.COLUMN_NUMBER); // column random choice
-			int component = new Random().nextInt(2); // element random choice (0: dust, 1: diamond)
-			this.rooms[lineIndex][colIndex].addContent(component);
+			int component = new Random().nextInt(3); // element random choice (0: dust, 1: diamond, 2:nothing)
+			if (component != 2) // dust or diamond
+			{
+				if(!this.rooms[lineIndex][colIndex].getContent().contains(component)) //check content
+				{
+					this.rooms[lineIndex][colIndex].addContent(component);
+				}
+			}
 			//diplay rooms			
 			this.showCard();
         }));
@@ -129,6 +135,13 @@ public class Manor extends Parent  {
 			}
 		}
 		return true;
+	}
+	/*
+	 * return rooms
+	 */
+	protected Element[][] getRooms()
+	{
+		return this.rooms;
 	}
 }
 
