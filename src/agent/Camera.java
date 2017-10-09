@@ -4,8 +4,11 @@ import environment.Manor;
 
 public class Camera extends Sensor {
 
-	public void seeEnvironment() {
-	    	//Manor localMap = getMap();
+	// 
+	
+	//see environment and updating bilieves
+	public void seeEnvironment(Manor manor, Agent owner) {
+		//owner.updateBilieves(manor.getRom());
 	}
 	
 }
