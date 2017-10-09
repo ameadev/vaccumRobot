@@ -2,15 +2,15 @@ package environment;
 
 import java.util.ArrayList;
 import java.util.Random;
-
-import java.util.Iterator;
-
 import application.Settings;
-
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.Parent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
 
 
@@ -29,17 +29,18 @@ public class Manor extends Parent  {
 	
 	public void run() {
 		
-			//do{
+		Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(Settings.ENV_DELAY), ev -> {
 			int lineIndex = new Random().nextInt(Settings.LINE_NUMBER); // line random choice
 			int colIndex = new Random().nextInt(Settings.COLUMN_NUMBER); // column random choice
 			int component = new Random().nextInt(2); // element random choice (0: dust, 1: diamond)
 			this.rooms[lineIndex][colIndex].addContent(component);
-			System.out.println("a");
-		
-			
+			//diplay rooms			
 			this.showCard();
-			//System.out.println(this.isManorClean());
-			//}while(!this.isManorClean());
+        }));
+        timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.play();
+			
+			
 	}
 	
 	protected void fillRooms()
@@ -59,27 +60,24 @@ public class Manor extends Parent  {
 	public void showCard()
 	{
 		
-		for(int i = 0; i < Settings.LINE_NUMBER; i++)
+		for(int line = 0; line < Settings.LINE_NUMBER; line++)
 		{
 			
-			for(int j = 0; j < Settings.COLUMN_NUMBER; j++)
+			for(int col = 0; col < Settings.COLUMN_NUMBER; col++)
 			{
 				Rectangle room = new Rectangle(Settings.W_WIDTH/Settings.LINE_NUMBER, Settings.W_HEIGHT/Settings.COLUMN_NUMBER);
-				room.setX(i * Settings.W_WIDTH/Settings.LINE_NUMBER);
-				room.setY(j * (Settings.W_HEIGHT/Settings.COLUMN_NUMBER));
+				room.setX(line * Settings.W_WIDTH/Settings.LINE_NUMBER);
+				room.setY(col * (Settings.W_HEIGHT/Settings.COLUMN_NUMBER));
 				room.setFill(Color.TRANSPARENT);
 			    room.setStroke(Color.BLACK);		    
 			    this.getChildren().add(room);
 			    
-			    if(rooms[i][j].getSize() != 0) //cel has element
+			    if(rooms[line][col].getSize() != 0) //cel has element
 			    {
-			    	//System.out.println("element");
-			    	ArrayList<Integer> celContent = this.rooms[i][j].getContent();
-			    	Iterator<Integer> content = celContent.iterator();
-			    	if(content.hasNext()) //check content type
+			    	ArrayList<Integer> celContent = this.rooms[line][col].getContent();
+			    	for(int i=0; i < celContent.size(); i++) //check element
 			    	{
-			    		Integer el = content.next();
-			    		if(el == 0) //dust
+			    		if(celContent.get(i) == 0) //dust
 			    		{
 			    			displayDust(room.getX(), room.getY());
 			    		}
@@ -93,6 +91,9 @@ public class Manor extends Parent  {
 							
 		}
 	} 
+	/*
+	 * create and display manor
+	 */
 	protected void displayDust(double posX, double posY)
 	{
 		Circle dust = new Circle();
@@ -102,6 +103,9 @@ public class Manor extends Parent  {
 	    dust.setFill(Color.BLACK);
 	    this.getChildren().add(dust);
 	}
+	/*
+	 * create and display diamond 
+	 */
 	protected void displayDiamond(double posX, double posY)
 	{
 		Circle diamond = new Circle();
@@ -111,6 +115,9 @@ public class Manor extends Parent  {
 	    diamond.setFill(Settings.COLOR_LIST[new Random().nextInt(Settings.COLOR_LIST.length)]);
 	    this.getChildren().add(diamond);
 	}
+	/*
+	 * @return true if the manor is clean, false else
+	 */
 	protected boolean isManorClean()
 	{
 		for(int i = 0; i < Settings.LINE_NUMBER; i++)
