@@ -139,7 +139,7 @@ public class Manor extends Parent  {
 	/*
 	 * return rooms
 	 */
-	protected Element[][] getRooms()
+	public Element[][] getRooms()
 	{
 		return this.rooms;
 	}
