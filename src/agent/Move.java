@@ -8,7 +8,7 @@ public class Move extends Effector {
 	}
 
 	@Override
-	public  void doAction() {
+	public void doAction() {
 		
 		 switch (this.moveTo) {
          case "right": Agent.x -=1; 
