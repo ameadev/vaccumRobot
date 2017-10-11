@@ -23,6 +23,10 @@ public class Agent
 	private DrawUp drawup;
 	private PickUp pickup;
 	private Camera camera;
+	private Move left = new Move("left");
+	private Move right = new Move("right");
+	private Move top = new Move("top");
+	private Move down = new Move("down");
 	
 	
 	
@@ -33,9 +37,9 @@ public class Agent
     }
 
 	
-	private void explore () //find a box that contains dust
+	private Effector exploreNotInformed () //find a box that contains dust
 	{
-		
+		return null;
 	}
 	
 	protected void updateBilieves (Element [][] manorRoom)
@@ -59,8 +63,8 @@ public class Agent
 				
 				if (currentElemnet.getSize() == 0)
 				{
-				//move
-					
+				//explore and move
+					exploreNotInformed();
 				}
 				else if (currentElemnet.getSize() == 1)
 				{
