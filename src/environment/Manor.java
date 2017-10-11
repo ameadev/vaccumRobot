@@ -138,10 +138,21 @@ public class Manor extends Parent  {
 	}
 	/*
 	 * return rooms
+	 * @ensure this.rooms
 	 */
 	public Element[][] getRooms()
 	{
 		return this.rooms;
+	}
+	/*delete cel content
+	 * @input : lineIndex, colIndex
+	 * @require lineIndex < Settings.LINE_NUMBER
+	 * @require colIndex < Settings.COL_NUMBER
+	 */
+	
+	public  void delRoomContent(int lineIndex, int colIndex)
+	{
+		this.rooms[lineIndex][colIndex].content.clear();
 	}
 }
 
