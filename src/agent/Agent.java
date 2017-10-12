@@ -80,12 +80,13 @@ public class Agent {
 					exploreNotInformed();
 					
 					while (Agent.x != newX || Agent.y != newY) {
-						if (Agent.x < newX) { new agent.Move("right"); }
-						else if (Agent.x > newX) { new agent.Move("left"); }
+						//if (Agent.x < newX) { new agent.Move("right"); } pas possible par ce que l'agent est inp
+						if (Agent.x < newX) { intension.add(right); }
+						else if (Agent.x > newX) { intension.add(left); }
 						else {} // Do nothing
 						
-						if (Agent.y < newY) { new agent.Move("up"); }
-						else if (Agent.y > newY) { new agent.Move("down"); }
+						if (Agent.y < newY) { intension.add(up); }
+						else if (Agent.y > newY) { intension.add(down); }
 						else {} // Do nothing
 					}
 				}
