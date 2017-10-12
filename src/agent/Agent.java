@@ -12,12 +12,16 @@ import javafx.animation.Timeline;
 import javafx.util.Duration;
 
 public class Agent {
+	
+	/******************
+	 * Initialisation *
+	 ******************/
 	static int x;
 	static int y;
 	static int actionCount;
 	static int energy;
 	private int Status; //1 for alive and 0 for died
-	private Element[][] bilieves, content; //clone de l'environnement
+	private Element[][] belif, content;
 	private Element[][] desire = new Element[Settings.LINE_NUMBER][Settings.COLUMN_NUMBER]; 
 	private ArrayList<Effector> intension ;
 	private DrawUp drawup;
@@ -28,16 +32,22 @@ public class Agent {
 	private Move top = new Move("top");
 	private Move down = new Move("down");
 	
+
+	
+	/************
+	 * Methodes *
+	 ************/
 	public void run() {	
 			
     }
-
-	private Element[][] exploreNotInformed () { //find a box that contains dust and/or diamond
+	
+	// Find a box that contain dust and/or diamond
+	private Element[][] exploreNotInformed () {
 		Element exist;
 		
 		for(int i = 0; i < Settings.LINE_NUMBER-1; i++) {
 			for (int j = 0; j < Settings.COLUMN_NUMBER-1; j++) {
-				exist = bilieves[i][i];
+				exist = belif[i][i];
 				
 				if(exist.getSize() == 1 || exist.getSize() == 2) {
 					content[i][j] = exist;
@@ -49,28 +59,30 @@ public class Agent {
 		return content;
 	}
 	
-	protected void updateBilieves (Element [][] manorRoom) {
+	// Create a clone of the map
+	protected void updateBelif (Element [][] manorRoom) {
 		for(int i = 0; i < Settings.LINE_NUMBER; i++) {
 			for (int j = 0; j < Settings.COLUMN_NUMBER; j++) {
-				bilieves[i][j] = manorRoom[i][j];
+				belif[i][j] = manorRoom[i][j];
 			}
 		}
 	}
 	
+	// Create a list of actions
 	protected void updateIntension () {
 		for(int i = 0; i < Settings.LINE_NUMBER; i++) {
 			for (int j = 0; j < Settings.COLUMN_NUMBER; j++) {
-				Element currentElemnet = bilieves[i][j];
+				Element currentElemnet = belif[i][j];
 				
+				// Explore map and move to next task
 				if (currentElemnet.getSize() == 0) {
-					//explore and move
 					exploreNotInformed();
 				}
 				else if (currentElemnet.getSize() == 1) {
-					if (currentElemnet.getContent().get(0) == 0) { // If dust
+					if (currentElemnet.getContent().get(0) == 0) { // ==> dust
 						intension.add(drawup);
 					}
-					else { // If diamond
+					else { // ==> diamond
 						intension.add(pickup);
 					}
 				}

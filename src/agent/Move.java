@@ -29,7 +29,4 @@ public class Move extends Effector {
 
 		//return (newPos);
 	}
-	
-	
-
 }
