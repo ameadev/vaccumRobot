@@ -3,12 +3,9 @@ package agent;
 import environment.Manor;
 
 public class Camera extends Sensor {
-
-	// 
-	
-	//see environment and updating bilieves
+	// Update local map
 	public void seeEnvironment(Manor manor, Agent owner) {
-		owner.updateBilieves(manor.getRooms());
+		owner.updateBelif(manor.getRooms());
 	}
 	
 }

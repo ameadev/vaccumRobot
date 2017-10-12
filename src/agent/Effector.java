@@ -18,9 +18,8 @@ public class Effector {
 	}
 
 
-	//
-	public void doAction()
-	{
+	// Call DrawUp, PickUp or Move for an eventually action
+	public void doAction() {
 		
 	}
 	
