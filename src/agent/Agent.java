@@ -17,7 +17,7 @@ public class Agent {
 	static int actionCount;
 	static int energy;
 	private int Status; //1 for alive and 0 for died
-	private Element[][] bilieves; //clone de l'environnement
+	private Element[][] bilieves, content; //clone de l'environnement
 	private Element[][] desire = new Element[Settings.LINE_NUMBER][Settings.COLUMN_NUMBER]; 
 	private ArrayList<Effector> intension ;
 	private DrawUp drawup;
@@ -32,12 +32,7 @@ public class Agent {
 			
     }
 
-	private Effector exploreNotInformed () { //find a box that contains dust
-		// 1. Read Bilieves
-		// 2. Check if Dust and/or Diamond exist
-		// 3. If true, save position
-		// 4. move agent to position
-		Effector content;
+	private Element[][] exploreNotInformed () { //find a box that contains dust and/or diamond
 		Element exist;
 		
 		for(int i = 0; i < Settings.LINE_NUMBER-1; i++) {
@@ -45,14 +40,13 @@ public class Agent {
 				exist = bilieves[i][i];
 				
 				if(exist.getSize() == 1 || exist.getSize() == 2) {
-					// ==> Effector or Element
-					// ==> move here or just return position of dust/diamond
+					content[i][j] = exist;
 				}
 				else {} // Do nothing
 			}
 		}
 		
-		//return content;
+		return content;
 	}
 	
 	protected void updateBilieves (Element [][] manorRoom) {
