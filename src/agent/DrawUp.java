@@ -5,7 +5,7 @@ import environment.Manor;
 public class DrawUp extends Effector {
 	public void doAction () {
 		//Manor drawUp = delContent();
-		Manor.DelRoomConten(Agent.x,Agent.y);
+		//problème de méthode static ==> Manor.delRoomContent(Agent.x,Agent.y);
 		
 	}
 }
