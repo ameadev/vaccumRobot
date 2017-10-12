@@ -124,7 +124,7 @@ public class Manor extends Parent  {
 	/*
 	 * @return true if the manor is clean, false else
 	 */
-	protected boolean isManorClean()
+	public boolean isManorClean()
 	{
 		for(int i = 0; i < Settings.LINE_NUMBER; i++)
 		{
@@ -144,6 +144,13 @@ public class Manor extends Parent  {
 	{
 		return this.rooms;
 	}
+	
+	//
+	public Element getRoomsElement(int elementX, int elementY)
+	{
+		return this.rooms[elementX][elementY];
+	}
+	
 	/*delete cel content
 	 * @input : lineIndex, colIndex
 	 * @require lineIndex < Settings.LINE_NUMBER

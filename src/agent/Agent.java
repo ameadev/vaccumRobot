@@ -1,10 +1,12 @@
 package agent;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
 
 import application.Settings;
 import environment.Element;
+import environment.Manor;
 import environment.Map;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -16,7 +18,7 @@ public class Agent {
 	/******************
 	 * Initialisation *
 	 ******************/
-	static int x, newX, y, newY, actionCount, energy;
+	static int x = 0, newX = 0, y = 0, newY = 0, actionCount, energy;
 	private int Status; //1 for alive and 0 for died
 	private Element[][] belif, content;
 	private Element[][] desire = new Element[Settings.LINE_NUMBER][Settings.COLUMN_NUMBER]; 
@@ -28,6 +30,9 @@ public class Agent {
 	private Move right = new Move("right");
 	private Move up = new Move("up");
 	private Move down = new Move("down");
+	//on a un problème à moins qu'on mette à jour cette information à chaque 
+	//fois que l'environnement change 
+	static Manor manor;
 	
 
 	
@@ -68,10 +73,10 @@ public class Agent {
 	protected void updateIntension () {
 		for(int i = 0; i < Settings.LINE_NUMBER; i++) {
 			for (int j = 0; j < Settings.COLUMN_NUMBER; j++) {
-				Element currentElemnet = belif[i][j];
+				Element currentElement = belif[i][j];
 				
 				// Explore map and move to next task
-				if (currentElemnet.getSize() == 0) {
+				if (currentElement.getSize() == 0) {
 					exploreNotInformed();
 					
 					while (Agent.x != newX || Agent.y != newY) {
@@ -84,15 +89,15 @@ public class Agent {
 						else {} // Do nothing
 					}
 				}
-				else if (currentElemnet.getSize() == 1) {
-					if (currentElemnet.getContent().get(0) == 0) { // ==> dust
+				else if (currentElement.getSize() == 1) {
+					if (currentElement.getContent().get(0) == 0) { // ==> dust
 						intension.add(drawup);
 					}
 					else { // ==>  diamond
 						intension.add(pickup);
 					}
 				}
-				else if (currentElemnet.getSize() == 2) {
+				else if (currentElement.getSize() == 2) {
 					intension.add(pickup);
 					intension.add(drawup);
 				}
@@ -100,11 +105,21 @@ public class Agent {
 		}
 	}
 	
+	//
 	protected void executeIntension () {
 		
+		Iterator<Effector> exe = intension.iterator();
+        while(exe.hasNext()){
+            exe.next().doAction();;
+        }
+        
 	}
 	
 	protected boolean goalTest () {
-		return false;
+		
+		return manor.isManorClean();
 	}
+
+	
+	
 }

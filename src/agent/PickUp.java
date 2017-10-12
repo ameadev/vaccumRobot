@@ -1,9 +1,16 @@
 package agent;
 
-import environment.Manor;
 
 public class PickUp extends Effector {
 	public void doAction() {
-		//problème de méthode static ==> Manor.delRoomContent(Agent.x,Agent.y);
+		Agent.manor.delRoomContent(Agent.x,Agent.y);
+		consumeEnergy ();
+	}
+	
+	//
+	public void consumeEnergy ()
+	{
+		Agent.energy ++;
+		Agent.actionCount++;
 	}
 }

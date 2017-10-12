@@ -12,21 +12,28 @@ public class Move extends Effector {
 		
 		 switch (this.moveTo) {
          case "right": Agent.x -=1; 
-                       Agent.actionCount++;
+                       consumeEnergy ();
                        break;
          case "left":  Agent.x +=1; 
-                       Agent.actionCount++;
+                       consumeEnergy ();
                        break;
-         case "up":   Agent.y +=1; 
-                       Agent.actionCount++;
+         case "up":    Agent.y +=1; 
+                       consumeEnergy ();
                        break;  
          case "down":  Agent.y -=1;
-                       Agent.actionCount++;
+                       consumeEnergy ();
                        break; 
          default: 
                   break;
 		 }
 
 		//return (newPos);
+	}
+	
+	//
+	public void consumeEnergy ()
+	{
+		Agent.energy ++;
+		Agent.actionCount++;
 	}
 }

@@ -1,6 +1,6 @@
 package agent;
 
-public class Effector {
+public abstract class Effector {
 
 	public Effector() {
 		super();
@@ -19,8 +19,8 @@ public class Effector {
 
 
 	// Call DrawUp, PickUp or Move for an eventually action
-	public void doAction() {
-		
-	}
+	abstract void doAction();
+	
+	abstract void consumeEnergy ();
 	
 }
