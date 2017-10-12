@@ -17,7 +17,7 @@ public class Move extends Effector {
          case "left":  Agent.x +=1; 
                        Agent.actionCount++;
                        break;
-         case "top":   Agent.y +=1; 
+         case "up":   Agent.y +=1; 
                        Agent.actionCount++;
                        break;  
          case "down":  Agent.y -=1;

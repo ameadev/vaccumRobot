@@ -16,10 +16,7 @@ public class Agent {
 	/******************
 	 * Initialisation *
 	 ******************/
-	static int x;
-	static int y;
-	static int actionCount;
-	static int energy;
+	static int x, newX, y, newY, actionCount, energy;
 	private int Status; //1 for alive and 0 for died
 	private Element[][] belif, content;
 	private Element[][] desire = new Element[Settings.LINE_NUMBER][Settings.COLUMN_NUMBER]; 
@@ -29,7 +26,7 @@ public class Agent {
 	private Camera camera;
 	private Move left = new Move("left");
 	private Move right = new Move("right");
-	private Move top = new Move("top");
+	private Move up = new Move("up");
 	private Move down = new Move("down");
 	
 
@@ -42,7 +39,7 @@ public class Agent {
     }
 	
 	// Find a box that contain dust and/or diamond
-	private Element[][] exploreNotInformed () {
+	private void exploreNotInformed () {
 		Element exist;
 		
 		for(int i = 0; i < Settings.LINE_NUMBER-1; i++) {
@@ -50,13 +47,12 @@ public class Agent {
 				exist = belif[i][i];
 				
 				if(exist.getSize() == 1 || exist.getSize() == 2) {
-					content[i][j] = exist;
+					newX = j;
+					newY = i;
 				}
 				else {} // Do nothing
 			}
 		}
-		
-		return content;
 	}
 	
 	// Create a clone of the map
@@ -77,12 +73,22 @@ public class Agent {
 				// Explore map and move to next task
 				if (currentElemnet.getSize() == 0) {
 					exploreNotInformed();
+					
+					while (Agent.x != newX || Agent.y != newY) {
+						if (Agent.x < newX) { new agent.Move("right"); }
+						else if (Agent.x > newX) { new agent.Move("left"); }
+						else {} // Do nothing
+						
+						if (Agent.y < newY) { new agent.Move("up"); }
+						else if (Agent.y > newY) { new agent.Move("down"); }
+						else {} // Do nothing
+					}
 				}
 				else if (currentElemnet.getSize() == 1) {
 					if (currentElemnet.getContent().get(0) == 0) { // ==> dust
 						intension.add(drawup);
 					}
-					else { // ==> diamond
+					else { // ==>  diamond
 						intension.add(pickup);
 					}
 				}
