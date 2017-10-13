@@ -1,7 +1,6 @@
 package application;
 
-
-
+import agent.Agent;
 import environment.Manor;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -22,10 +21,20 @@ public class MainApp extends Application {
         primaryStage.setTitle(Settings.APP_NAME);
         primaryStage.setScene(scene);
         primaryStage.show();
-        Manor myManor = new Manor();
-        root.getChildren().add(myManor);
-        myManor.run();
-       
+        Manor myManor = new Manor(); //create manor
+        root.getChildren().add(myManor); 
+        myManor.run(); // start manor's life
+        try {
+			Thread.sleep(1000); //sleep 1 second before start robot
+		} catch (InterruptedException e) {
+			
+			e.printStackTrace();
+		}
+        //robot's thread
+        Thread robotThread = new Thread(new Agent(myManor));
+        robotThread.start();
+        
+            
 	}
 	
 	public static void main(String[] args) {

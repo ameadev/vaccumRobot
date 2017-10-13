@@ -160,6 +160,7 @@ public class Manor extends Parent  {
 	public  void delRoomContent(int lineIndex, int colIndex)
 	{
 		this.rooms[lineIndex][colIndex].content.clear();
+		
 	}
 }
 

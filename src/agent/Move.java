@@ -11,16 +11,16 @@ public class Move extends Effector {
 	public void doAction() {
 		
 		 switch (this.moveTo) {
-         case "right": Agent.x -=1; 
+         case "right": Agent.posX -=1; 
                        consumeEnergy ();
                        break;
-         case "left":  Agent.x +=1; 
+         case "left":  Agent.posX +=1; 
                        consumeEnergy ();
                        break;
-         case "up":    Agent.y +=1; 
+         case "up":    Agent.posY +=1; 
                        consumeEnergy ();
                        break;  
-         case "down":  Agent.y -=1;
+         case "down":  Agent.posY -=1;
                        consumeEnergy ();
                        break; 
          default: 

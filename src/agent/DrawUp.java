@@ -5,14 +5,14 @@ import environment.Element;
 public class DrawUp extends Effector {
 	
 	public void doAction () {
-		Agent.manor.delRoomContent(Agent.x,Agent.y);
+		Agent.manor.delRoomContent(Agent.posX,Agent.posY);
 		consumeEnergy();
 	}
 	
 	//
 	public void consumeEnergy ()
 	{
-		Element currentElement = Agent.manor.getRoomsElement(Agent.x,Agent.y);
+		Element currentElement = Agent.manor.getRoomsElement(Agent.posX,Agent.posY);
 		if ((currentElement.getSize() == 1) && (currentElement.getContent().get(0) == 1))
 		{
 			Agent.energy +=2;
