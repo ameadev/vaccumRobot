@@ -24,7 +24,7 @@ public class Agent implements Runnable {
 	private Element[][] belief = new Element[Settings.LINE_NUMBER][Settings.COLUMN_NUMBER];
 	private Element[][] content = new Element[Settings.LINE_NUMBER][Settings.COLUMN_NUMBER];
 	private Element[][] desire = new Element[Settings.LINE_NUMBER][Settings.COLUMN_NUMBER]; 
-	private ArrayList<Effector> intension ;
+	private ArrayList<Effector> intension = new ArrayList<Effector>() ;
 	private DrawUp drawup;
 	private PickUp pickup;
 	private Camera camera;
@@ -47,30 +47,19 @@ public class Agent implements Runnable {
 	 * Methodes *
 	 ************/
 	public void run() {	
-			do 
-			{
-				
-				try {
-					Thread.sleep(Settings.ROBOT_DELAY);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					
-				}
-				updateBelief(manor.getRooms());
-				//updateIntension();
-				//executeIntension();
-				System.out.println("bfs");
-				bfs();
-				manor.delRoomContent(newPosX, newPosY);
-				
-				}while(!this.goalTest());
-			
+		do {
+			try {
+				Thread.sleep(Settings.ROBOT_DELAY);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			updateBelief(manor.getRooms());
+			updateIntension();
+			executeIntension();
+		}while(!this.goalTest());
+	}
 		
-		
-		
-    }
-	
 	// Find a box that contain dust and/or diamond
 	private void exploreNotInformed () {
 		Element exist;
@@ -161,32 +150,25 @@ public class Agent implements Runnable {
 						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()+1)); // right
 						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); //left
 					}
-				}
-				
-				
+				}			
 				
 			}
-			else // node has dirt
-			{
+			else { // node has dirt
 				newPosX = cn.getNodeX();
 				newPosY = cn.getNodeY();
 				System.out.println(newPosX + ":" + newPosY);
 				break;
 			}
 		}
-		
-		
-				
 	}
 	/*
 	 * @input x, y
 	 * @return true if belief[x][y].size == 0
 	 */
-	private boolean nodeTest(int nodeX, int nodeY)
-	{
-		
+	private boolean nodeTest(int nodeX, int nodeY) {
 		return belief[nodeX][nodeY].getSize() == 0;
 	}
+	
 	// Create a clone of the map
 	protected void updateBelief (Element [][] manorRoom) {
 		for(int i = 0; i < Settings.LINE_NUMBER; i++) {
@@ -201,66 +183,43 @@ public class Agent implements Runnable {
 	
 	// Create a list of actions
 	protected void updateIntension () {
-		for(int i = 0; i < Settings.LINE_NUMBER; i++) {
-			for (int j = 0; j < Settings.COLUMN_NUMBER; j++) {
-				Element currentElement = belief[i][j];
-				
-				// Explore map and move to next task
-				if (currentElement.getSize() == 0) {
-					exploreNotInformed();
-					
-					while (Agent.posX != newPosX || Agent.posY != newPosY) {
-						//if (agent.posX < newPosX) { new agent.Move("right"); } pas possible par ce que l'agent est inp
-						if (Agent.posX < newPosX) { intension.add(right); }
-						else if (Agent.posX > newPosX) { intension.add(left); }
-						else {} // Do nothing
-						
-						if (Agent.posY < newPosY) { intension.add(up); }
-						else if (Agent.posY > newPosY) { intension.add(down); }
-						else {} // Do nothing
-					}
-				}
-				else if(currentElement.getSize() != 0) // room not empty
-				{
-					for(Integer dirt : currentElement.getContent())
-					{
-						if (dirt == 0)  //dust
-						{
-							intension.add(drawup);
-						}
-						else  //diamond
-						{
-							intension.add(pickup);
-						}
-								
-					}
-				}
-				/*
-				else if (currentElement.getSize() == 1) {
-					if (currentElement.getContent().get(0) == 0) { // ==> dust
-						
-						intension.add(drawup);
-					}
-					else { // ==>  diamond
-						intension.add(pickup);
-					}
-				}
-				else if (currentElement.getSize() == 2) {
-					intension.add(pickup);
+		// Explore map and move to next task
+		bfs();
+		while (Agent.posX != newPosX && Agent.posY != newPosY) {
+			if (Agent.posX < newPosX) { intension.add(right); }
+			else if (Agent.posX > newPosX) { intension.add(left); }
+			else {} // Do nothing
+		
+			if (Agent.posY < newPosY) { intension.add(up); }
+			else if (Agent.posY > newPosY) { intension.add(down); }
+			else {} // Do nothing
+		}
+		Element CurrentElement = belief[newPosX][newPosY];
+		if (CurrentElement.getSize() == 2) {
+			intension.add(pickup);
+			intension.add(drawup);
+		}
+		else {
+			if (CurrentElement.getContent().size() != 0) { 
+				if ( CurrentElement.getContent().get(0) == 0) { //dust
 					intension.add(drawup);
-				} */
+				}
+				else {  //diamond
+					intension.add(pickup);
+				}
 			}
 		}
 	}
 	
 	//
 	protected void executeIntension () {
-		
 		Iterator<Effector> exe = intension.iterator();
-        while(exe.hasNext()){
-            exe.next().doAction();;
-        }
-        
+       	while(exe.hasNext()) {
+       		//System.out.println(exe.next());
+       		exe.next().doAction();
+       		//System.out.println(exe.next());
+       	}
+       	intension.clear();
 	}
 	
 	protected boolean goalTest () {

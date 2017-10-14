@@ -27,14 +27,11 @@ public class MainApp extends Application {
         try {
 			Thread.sleep(1000); //sleep 1 second before start robot
 		} catch (InterruptedException e) {
-			
 			e.printStackTrace();
 		}
         //robot's thread
         Thread robotThread = new Thread(new Agent(myManor));
-        robotThread.start();
-        
-            
+        robotThread.start();           
 	}
 	
 	public static void main(String[] args) {
