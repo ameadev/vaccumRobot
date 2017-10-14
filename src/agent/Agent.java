@@ -17,14 +17,14 @@ import javafx.util.Duration;
 public class Agent implements Runnable {
 	
 	/******************
-	 * Initialisation *
+	 * Initialization *
 	 ******************/
 	static int posX = 0, newPosX = 0, posY = 0, newPosY = 0, actionCount, energy;
 	private int Status; //1 for alive and 0 for died
 	private Element[][] belief = new Element[Settings.LINE_NUMBER][Settings.COLUMN_NUMBER];
 	private Element[][] content = new Element[Settings.LINE_NUMBER][Settings.COLUMN_NUMBER];
 	private Element[][] desire = new Element[Settings.LINE_NUMBER][Settings.COLUMN_NUMBER]; 
-	private ArrayList<Effector> intension = new ArrayList<Effector>() ;
+	private ArrayList<Effector> intension = new ArrayList<Effector>();
 	private DrawUp drawup;
 	private PickUp pickup;
 	private Camera camera;
@@ -40,7 +40,7 @@ public class Agent implements Runnable {
 	}
 	
 	/************
-	 * Methodes *
+	 * Methods *
 	 ************/
 	public void run() {	
 		do {
@@ -53,6 +53,8 @@ public class Agent implements Runnable {
 			updateBelief(manor.getRooms());
 			updateIntension();
 			executeIntension();
+			
+			performanceMeasure();
 		}while(!this.goalTest());
 	}
 	
@@ -66,16 +68,16 @@ public class Agent implements Runnable {
 			if (this.nodeTest(cn.getNodeX(), cn.getNodeY())) {
 				// create list of new nodes
 				//System.out.println("explore " + cn.getNodeX() + " " + cn.getNodeY());
-				if (cn.getNodeX() == 0) { // moov down and right
+				if (cn.getNodeX() == 0) { // move down and right
 					nodeList.add(new Node(cn.getNodeX()+1, cn.getNodeY())); // down
 					
 					if(cn.getNodeY()==0) {					
 						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()+1)); // right
 					} else if (cn.getNodeY()==Settings.COLUMN_NUMBER-1) {					
-						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); //left
+						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); // left
 					} else {
 						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()+1)); // right
-						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); //left
+						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); // left
 					}
 				} else if(cn.getNodeX() == Settings.LINE_NUMBER-1) {
 					nodeList.add(new Node(cn.getNodeX()-1, cn.getNodeY())); // up
@@ -83,10 +85,10 @@ public class Agent implements Runnable {
 					if(cn.getNodeY()==0) {					
 						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()+1)); // right			
 					} else if (cn.getNodeY()==Settings.COLUMN_NUMBER-1) {					
-						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); //left
+						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); // left
 					} else {
 						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()+1)); // right
-						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); //left
+						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); // left
 					}
 				} else {
 					nodeList.add(new Node(cn.getNodeX()-1, cn.getNodeY())); // up
@@ -95,10 +97,10 @@ public class Agent implements Runnable {
 					if(cn.getNodeY()==0) {					
 						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()+1)); // right					
 					} else if (cn.getNodeY()==Settings.COLUMN_NUMBER-1) {					
-						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); //left
+						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); // left
 					} else {
 						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()+1)); // right
-						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); //left
+						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); // left
 					}
 				}			
 				
@@ -150,9 +152,9 @@ public class Agent implements Runnable {
 			intension.add(drawup);
 		} else {
 			if (CurrentElement.getContent().size() != 0) { 
-				if ( CurrentElement.getContent().get(0) == 0) { //dust
+				if ( CurrentElement.getContent().get(0).equals(0) ) { // dust
 					intension.add(drawup);
-				} else {  //diamond
+				} else { //diamond
 					intension.add(pickup);
 				}
 			}
@@ -164,10 +166,19 @@ public class Agent implements Runnable {
        	while(exe.hasNext()) {
        		exe.next().doAction();
        	}
-       	intension.clear();
+       	intension = new ArrayList<Effector>(); // clear list
 	}
 	
 	protected boolean goalTest () {
 		return manor.isManorClean();
+	}
+	
+	private void performanceMeasure() {
+		System.out.println("Number of actions : " + actionCount);
+		System.out.println("Energy lose : " + energy);
+		
+		if(actionCount == energy) { System.out.println("This agent is awesome"); }
+		else if ((energy - actionCount)<5) { System.out.println("This agent is pretty usefull"); }
+		else { System.out.println("This agent is useless"); }
 	}
 }
