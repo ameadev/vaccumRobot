@@ -32,13 +32,9 @@ public class Agent implements Runnable {
 	private Move right = new Move("right");
 	private Move up = new Move("up");
 	private Move down = new Move("down");
-	//on a un problème à moins qu'on mette à jour cette information à chaque 
-	//fois que l'environnement change 
 	static Manor manor;
-	
 
-	public Agent(Manor myManor)
-	{
+	public Agent(Manor myManor) {
 		manor = myManor;
 		//System.out.println(manor);
 	}
@@ -59,101 +55,54 @@ public class Agent implements Runnable {
 			executeIntension();
 		}while(!this.goalTest());
 	}
-		
-	// Find a box that contain dust and/or diamond
-	private void exploreNotInformed () {
-		Element exist;
-		
-		for(int i = 0; i < Settings.LINE_NUMBER-1; i++) {
-			for (int j = 0; j < Settings.COLUMN_NUMBER-1; j++) {
-				exist = belief[i][i];
-				
-				if(exist.getSize() == 1 || exist.getSize() == 2) {
-					newPosX = j;
-					newPosY = i;
-				}
-				else {} // Do nothing
-			}
-		}
-	}
-	private void bfs()
-	{
-		
+	
+	private void bfs() {
 		ConcurrentLinkedQueue<Node> nodeList = new ConcurrentLinkedQueue<Node>();				
 		//ArrayList<Node> nodeList = new ArrayList<Node>();
 		nodeList.add(new Node(posX, posY));
-		for (int n=0; n < nodeList.size(); n++)
-		{	Node cn = nodeList.poll();
+		for (int n=0; n < nodeList.size(); n++) {
+			Node cn = nodeList.poll();
 			//System.out.println(nodeList.size());
-			if (this.nodeTest(cn.getNodeX(), cn.getNodeY())) //
-			{
+			if (this.nodeTest(cn.getNodeX(), cn.getNodeY())) {
 				// create list of new nodes
 				//System.out.println("explore " + cn.getNodeX() + " " + cn.getNodeY());
-				if (cn.getNodeX() == 0) // moov down and right
-				{
+				if (cn.getNodeX() == 0) { // moov down and right
 					nodeList.add(new Node(cn.getNodeX()+1, cn.getNodeY())); // down
 					
-					if(cn.getNodeY()==0)
-					{					
+					if(cn.getNodeY()==0) {					
 						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()+1)); // right
-						
-					}
-					else if (cn.getNodeY()==Settings.COLUMN_NUMBER-1)
-					{					
+					} else if (cn.getNodeY()==Settings.COLUMN_NUMBER-1) {					
 						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); //left
-						
-					}
-					else
-					{
+					} else {
 						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()+1)); // right
 						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); //left
 					}
-					
-				}
-				else if(cn.getNodeX() == Settings.LINE_NUMBER-1)
-				{
+				} else if(cn.getNodeX() == Settings.LINE_NUMBER-1) {
 					nodeList.add(new Node(cn.getNodeX()-1, cn.getNodeY())); // up
-					if(cn.getNodeY()==0)
-					{					
-						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()+1)); // right
-						
-						
-					}
-					else if (cn.getNodeY()==Settings.COLUMN_NUMBER-1)
-					{					
+					
+					if(cn.getNodeY()==0) {					
+						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()+1)); // right			
+					} else if (cn.getNodeY()==Settings.COLUMN_NUMBER-1) {					
 						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); //left
-						
-					}
-					else
-					{
+					} else {
 						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()+1)); // right
 						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); //left
 					}
-				}
-				else
-				{
+				} else {
 					nodeList.add(new Node(cn.getNodeX()-1, cn.getNodeY())); // up
 					nodeList.add(new Node(cn.getNodeX()+1, cn.getNodeY())); // down
-					if(cn.getNodeY()==0)
-					{					
-						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()+1)); // right
-						
-						
-					}
-					else if (cn.getNodeY()==Settings.COLUMN_NUMBER-1)
-					{					
+					
+					if(cn.getNodeY()==0) {					
+						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()+1)); // right					
+					} else if (cn.getNodeY()==Settings.COLUMN_NUMBER-1) {					
 						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); //left
-						
-					}
-					else
-					{
+					} else {
 						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()+1)); // right
 						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); //left
 					}
 				}			
 				
-			}
-			else { // node has dirt
+			} else { // node has dirt
 				newPosX = cn.getNodeX();
 				newPosY = cn.getNodeY();
 				System.out.println(newPosX + ":" + newPosY);
@@ -161,6 +110,7 @@ public class Agent implements Runnable {
 			}
 		}
 	}
+	
 	/*
 	 * @input x, y
 	 * @return true if belief[x][y].size == 0
@@ -198,35 +148,26 @@ public class Agent implements Runnable {
 		if (CurrentElement.getSize() == 2) {
 			intension.add(pickup);
 			intension.add(drawup);
-		}
-		else {
+		} else {
 			if (CurrentElement.getContent().size() != 0) { 
 				if ( CurrentElement.getContent().get(0) == 0) { //dust
 					intension.add(drawup);
-				}
-				else {  //diamond
+				} else {  //diamond
 					intension.add(pickup);
 				}
 			}
 		}
 	}
 	
-	//
 	protected void executeIntension () {
 		Iterator<Effector> exe = intension.iterator();
        	while(exe.hasNext()) {
-       		//System.out.println(exe.next());
        		exe.next().doAction();
-       		//System.out.println(exe.next());
        	}
        	intension.clear();
 	}
 	
 	protected boolean goalTest () {
-		
 		return manor.isManorClean();
 	}
-
-	
-	
 }
