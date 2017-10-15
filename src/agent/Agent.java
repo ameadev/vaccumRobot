@@ -8,7 +8,11 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import application.Settings;
 import environment.Element;
 import environment.Manor;
-
+import environment.Map;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 
 public class Agent implements Runnable {
 	
@@ -33,7 +37,6 @@ public class Agent implements Runnable {
 
 	public Agent(Manor myManor) {
 		manor = myManor;
-		
 		//System.out.println(manor);
 	}
 	
@@ -49,12 +52,8 @@ public class Agent implements Runnable {
 				e.printStackTrace();
 			}
 			updateBelief(manor.getRooms());
-			//System.out.println("update");
-			//updateIntension();
-			bfs();
-			//System.out.println("execution");
+			updateIntension();
 			executeIntension();
-
 		}while (!this.goalTest());
 		
 	}
@@ -145,10 +144,9 @@ public class Agent implements Runnable {
 			if (Agent.posX < newPosX) { this.intension.add(left); tempX++;  /*left.doAction();*/ }
 			else if (Agent.posX > newPosX) { this.intension.add(right); tempX--; /*right.doAction();*/ }
 			else {} // Do nothing
-	    
+		    
 			if (Agent.posY < newPosY) { this.intension.add(down); tempY++; /*down.doAction();*/ }
 			else if (Agent.posY > newPosY) { this.intension.add(up); tempY--; /*up.doAction();*/ }
-
 			else {} // Do nothing
 		
 		System.out.println("lol dans while");
@@ -162,8 +160,7 @@ public class Agent implements Runnable {
 		}
 		else {
 			if (CurrentElement.getContent().size() != 0) { 
-
-				if ( CurrentElement.getContent().get(0) == 0) { //dust 
+				if ( CurrentElement.getContent().get(0) == 0) { //dust  MAJ
 					intension.add(drawup);
 				}
 				else {  //diamond
@@ -177,7 +174,6 @@ public class Agent implements Runnable {
 	
 	//
 	protected void executeIntension () {
-
 	
 		int tt = this.intension.size();
 		System.out.println("taille de intension "+tt);
