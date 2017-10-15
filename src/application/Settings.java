@@ -16,7 +16,5 @@ public class Settings {
 	public static int ENV_DELAY = 5; // second
 	public static int COLUMN_NUMBER = 10;
 	public static int LINE_NUMBER = 10;
-	public static Color COLOR_LIST[] = {Color.BLUE,
-										Color.BLUEVIOLET, Color.BROWN};
-		
+	public static Color COLOR_LIST[] = {Color.BLUE, Color.BLUEVIOLET, Color.BROWN};
 }

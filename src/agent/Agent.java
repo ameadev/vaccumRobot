@@ -13,37 +13,34 @@ import environment.Manor;
 public class Agent implements Runnable {
 	
 	/******************
-	 * Initialisation *
+	 * Initialization *
 	 ******************/
 	static int posX = 0, newPosX = 0, posY = 0, newPosY = 0, actionCount, energy;
 	private int Status; //1 for alive and 0 for died
 	private Element[][] belief = new Element[Settings.LINE_NUMBER][Settings.COLUMN_NUMBER];
 	private Element[][] content = new Element[Settings.LINE_NUMBER][Settings.COLUMN_NUMBER];
 	private Element[][] desire = new Element[Settings.LINE_NUMBER][Settings.COLUMN_NUMBER]; 
+
 	private ArrayList<Effector> intension = new ArrayList<Effector>() ;
-	private DrawUp drawup;
-	private PickUp pickup;
-	private Camera camera;
+	private DrawUp drawup = new DrawUp();
+	private PickUp pickup = new PickUp();
+	private Camera camera = new Camera();
 	private Move left = new Move("left");
 	private Move right = new Move("right");
 	private Move up = new Move("up");
 	private Move down = new Move("down");
-	//on a un problème à moins qu'on mette à jour cette information à chaque 
-	//fois que l'environnement change 
 	static Manor manor;
-	
 
-	public Agent(Manor myManor)
-	{
+	public Agent(Manor myManor) {
 		manor = myManor;
 		
 		//System.out.println(manor);
 	}
 	
 	/************
-	 * Methodes *
+	 * Methods *
 	 ************/
-	public void run() {	
+	public void run() {
 		do {
 			try {
 				Thread.sleep(Settings.ROBOT_DELAY);
@@ -57,104 +54,61 @@ public class Agent implements Runnable {
 			bfs();
 			//System.out.println("execution");
 			executeIntension();
-		}while(!this.goalTest());
-		System.out.println("mort");
-	}
+
+		}while (!this.goalTest());
 		
-	// Find a box that contain dust and/or diamond
-	private void exploreNotInformed () {
-		Element exist;
-		
-		for(int i = 0; i < Settings.LINE_NUMBER-1; i++) {
-			for (int j = 0; j < Settings.COLUMN_NUMBER-1; j++) {
-				exist = belief[i][i];
-				
-				if(exist.getSize() == 1 || exist.getSize() == 2) {
-					newPosX = j;
-					newPosY = i;
-				}
-				else {} // Do nothing
-			}
-		}
 	}
+	
+	//	
 	private void bfs()
 	{
 		
 		ConcurrentLinkedQueue<Node> nodeList = new ConcurrentLinkedQueue<Node>();				
 		//ArrayList<Node> nodeList = new ArrayList<Node>();
 		nodeList.add(new Node(posX, posY));
-		for (int n=0; n < nodeList.size(); n++)
-		{	Node cn = nodeList.poll();
+		for (int n=0; n < nodeList.size(); n++) {
+			Node cn = nodeList.poll();
 			//System.out.println(nodeList.size());
-			if (this.nodeTest(cn.getNodeX(), cn.getNodeY())) //
-			{
+			if (this.nodeTest(cn.getNodeX(), cn.getNodeY())) {
 				// create list of new nodes
 				//System.out.println("explore " + cn.getNodeX() + " " + cn.getNodeY());
-				if (cn.getNodeX() == 0) // moov down and right
-				{
+				if (cn.getNodeX() == 0) { // move down and right
 					nodeList.add(new Node(cn.getNodeX()+1, cn.getNodeY())); // down
 					
-					if(cn.getNodeY()==0)
-					{					
+					if(cn.getNodeY()==0) {					
 						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()+1)); // right
-						
-					}
-					else if (cn.getNodeY()==Settings.COLUMN_NUMBER-1)
-					{					
-						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); //left
-						
-					}
-					else
-					{
+					} else if (cn.getNodeY()==Settings.COLUMN_NUMBER-1) {					
+						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); // left
+					} else {
 						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()+1)); // right
-						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); //left
+						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); // left
 					}
-					
-				}
-				else if(cn.getNodeX() == Settings.LINE_NUMBER-1)
-				{
+				} else if(cn.getNodeX() == Settings.LINE_NUMBER-1) {
 					nodeList.add(new Node(cn.getNodeX()-1, cn.getNodeY())); // up
-					if(cn.getNodeY()==0)
-					{					
+					
+					if(cn.getNodeY()==0) {					
+						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()+1)); // right			
+					} else if (cn.getNodeY()==Settings.COLUMN_NUMBER-1) {					
+						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); // left
+					} else {
 						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()+1)); // right
-						
-						
+						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); // left
 					}
-					else if (cn.getNodeY()==Settings.COLUMN_NUMBER-1)
-					{					
-						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); //left
-						
-					}
-					else
-					{
-						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()+1)); // right
-						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); //left
-					}
-				}
-				else
-				{
+				} else {
 					nodeList.add(new Node(cn.getNodeX()-1, cn.getNodeY())); // up
 					nodeList.add(new Node(cn.getNodeX()+1, cn.getNodeY())); // down
-					if(cn.getNodeY()==0)
-					{					
+					
+					if(cn.getNodeY()==0) {					
+						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()+1)); // right					
+					} else if (cn.getNodeY()==Settings.COLUMN_NUMBER-1) {					
+						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); // left
+					} else {
 						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()+1)); // right
-						
-						
-					}
-					else if (cn.getNodeY()==Settings.COLUMN_NUMBER-1)
-					{					
-						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); //left
-						
-					}
-					else
-					{
-						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()+1)); // right
-						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); //left
+						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); // left
 					}
 				}			
 				
-			}
-			else { // node has dirt
+			} else { // node has dirt
 				newPosX = cn.getNodeX();
 				newPosY = cn.getNodeY();
 				System.out.println(newPosX + ":" + newPosY);
@@ -162,6 +116,7 @@ public class Agent implements Runnable {
 			}
 		}
 	}
+	
 	/*
 	 * @input x, y
 	 * @return true if belief[x][y].size == 0
@@ -175,67 +130,77 @@ public class Agent implements Runnable {
 		for(int i = 0; i < Settings.LINE_NUMBER; i++) {
 			for (int j = 0; j < Settings.COLUMN_NUMBER; j++) {
 				belief[i][j] = manorRoom[i][j];
-				//System.out.println(manorRoom[i][j]);
 			}
 		}
 		
-		//belief = manor.getRooms();
 	}
 	
 	// Create a list of actions
 	protected void updateIntension () {
 		// Explore map and move to next task
 		bfs();
-		while (Agent.posX != newPosX && Agent.posY != newPosY) {
-			if (Agent.posX < newPosX) { intension.add(right); }
-			else if (Agent.posX > newPosX) { intension.add(left); }
+		int tempX = Agent.posX, tempY = Agent.posY;
+		while (tempX != newPosX && tempY != newPosY) {
+		//while (Agent.posX != newPosX && Agent.posY != newPosY) {
+			if (Agent.posX < newPosX) { this.intension.add(left); tempX++;  /*left.doAction();*/ }
+			else if (Agent.posX > newPosX) { this.intension.add(right); tempX--; /*right.doAction();*/ }
+			else {} // Do nothing
+	    
+			if (Agent.posY < newPosY) { this.intension.add(down); tempY++; /*down.doAction();*/ }
+			else if (Agent.posY > newPosY) { this.intension.add(up); tempY--; /*up.doAction();*/ }
+
 			else {} // Do nothing
 		
-			if (Agent.posY < newPosY) { intension.add(down); }
-			else if (Agent.posY > newPosY) { intension.add(up); }
-			else {} // Do nothing
+		System.out.println("lol dans while");
 		}
+		
 		Element CurrentElement = belief[newPosX][newPosY];
 		if (CurrentElement.getSize() == 2) {
-			intension.add(pickup);
-			intension.add(drawup);
+
+			this.intension.add(pickup);
+			this.intension.add(drawup);
 		}
 		else {
 			if (CurrentElement.getContent().size() != 0) { 
-				if ( CurrentElement.getContent().get(0).equals(0)) { //dust
+
+				if ( CurrentElement.getContent().get(0) == 0) { //dust 
 					intension.add(drawup);
 				}
 				else {  //diamond
-					intension.add(pickup);
+					this.intension.add(pickup);
+
 				}
 			}
 		}
 	}
 	
+	
 	//
 	protected void executeIntension () {
-		System.out.println(intension.size());
-		/*Iterator<Effector> exe = intension.iterator();
-		System.out.println(intension.size());
-		//manor.delRoomContent(newPosX, newPosY);
-       	while(exe.hasNext()) {
-       		Effector ef = exe.next();
-       		System.out.println(ef);
-       		//manor.delRoomContent(newPosX, newPosY);
-       		//ef.doAction();
-       		//exe.next().doAction();
-       		//System.out.println(exe.next());
-       	}*/
-		System.out.println("exe :" + newPosX + ":" + newPosY);
-		manor.delRoomContent(newPosX, newPosY);
-       	//intension.clear();
+
+	
+		int tt = this.intension.size();
+		System.out.println("taille de intension "+tt);
+       	for(int k=0; k < tt; k++) 
+       	{       		
+       		this.intension.get(k).doAction();       		
+       	}
+       	
+       this.intension.clear();
+       //intension = new ArrayList<Effector>();
+
 	}
 	
 	protected boolean goalTest () {
-		
 		return manor.isManorClean();
 	}
-
 	
-	
+	private void performanceMeasure() {
+		System.out.println("Number of actions : " + actionCount);
+		System.out.println("Energy lose : " + energy);
+		
+		if(actionCount == energy) { System.out.println("This agent is awesome"); }
+		else if ((energy - actionCount)<5) { System.out.println("This agent is pretty usefull"); }
+		else { System.out.println("This agent is useless"); }
+	}
 }

@@ -9,7 +9,6 @@ public class Move extends Effector {
 
 	@Override
 	public void doAction() {
-		
 		 switch (this.moveTo) {
          case "right": Agent.posX -=1; 
                        consumeEnergy ();
@@ -17,22 +16,18 @@ public class Move extends Effector {
          case "left":  Agent.posX +=1; 
                        consumeEnergy ();
                        break;
-         case "up":    Agent.posY +=1; 
+         case "up":    Agent.posY -=1; 
                        consumeEnergy ();
                        break;  
-         case "down":  Agent.posY -=1;
+         case "down":  Agent.posY +=1;
                        consumeEnergy ();
                        break; 
          default: 
                   break;
 		 }
-
-		//return (newPos);
 	}
 	
-	//
-	public void consumeEnergy ()
-	{
+	public void consumeEnergy() {
 		Agent.energy ++;
 		Agent.actionCount++;
 	}
