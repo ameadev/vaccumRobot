@@ -17,13 +17,14 @@ import javafx.util.Duration;
 public class Agent implements Runnable {
 	
 	/******************
-	 * Initialisation *
+	 * Initialization *
 	 ******************/
 	static int posX = 0, newPosX = 0, posY = 0, newPosY = 0, actionCount, energy;
 	private int Status; //1 for alive and 0 for died
 	private Element[][] belief = new Element[Settings.LINE_NUMBER][Settings.COLUMN_NUMBER];
 	private Element[][] content = new Element[Settings.LINE_NUMBER][Settings.COLUMN_NUMBER];
 	private Element[][] desire = new Element[Settings.LINE_NUMBER][Settings.COLUMN_NUMBER]; 
+
 	private ArrayList<Effector> intension = new ArrayList<Effector>() ;
 	private DrawUp drawup = new DrawUp();
 	private PickUp pickup = new PickUp();
@@ -32,19 +33,15 @@ public class Agent implements Runnable {
 	private Move right = new Move("right");
 	private Move up = new Move("up");
 	private Move down = new Move("down");
-	//on a un problème à moins qu'on mette à jour cette information à chaque 
-	//fois que l'environnement change 
 	static Manor manor;
-	
 
-	public Agent(Manor myManor)
-	{
+	public Agent(Manor myManor) {
 		manor = myManor;
 		//System.out.println(manor);
 	}
 	
 	/************
-	 * Methodes *
+	 * Methods *
 	 ************/
 	public void run() {
 		do {
@@ -68,78 +65,49 @@ public class Agent implements Runnable {
 		ConcurrentLinkedQueue<Node> nodeList = new ConcurrentLinkedQueue<Node>();				
 		//ArrayList<Node> nodeList = new ArrayList<Node>();
 		nodeList.add(new Node(posX, posY));
-		for (int n=0; n < nodeList.size(); n++)
-		{	Node cn = nodeList.poll();
+		for (int n=0; n < nodeList.size(); n++) {
+			Node cn = nodeList.poll();
 			//System.out.println(nodeList.size());
-			if (this.nodeTest(cn.getNodeX(), cn.getNodeY())) //
-			{
+			if (this.nodeTest(cn.getNodeX(), cn.getNodeY())) {
 				// create list of new nodes
 				//System.out.println("explore " + cn.getNodeX() + " " + cn.getNodeY());
-				if (cn.getNodeX() == 0) // moov down and right
-				{
+				if (cn.getNodeX() == 0) { // move down and right
 					nodeList.add(new Node(cn.getNodeX()+1, cn.getNodeY())); // down
 					
-					if(cn.getNodeY()==0)
-					{					
+					if(cn.getNodeY()==0) {					
 						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()+1)); // right
-						
-					}
-					else if (cn.getNodeY()==Settings.COLUMN_NUMBER-1)
-					{					
-						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); //left
-						
-					}
-					else
-					{
+					} else if (cn.getNodeY()==Settings.COLUMN_NUMBER-1) {					
+						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); // left
+					} else {
 						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()+1)); // right
-						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); //left
+						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); // left
 					}
-					
-				}
-				else if(cn.getNodeX() == Settings.LINE_NUMBER-1)
-				{
+				} else if(cn.getNodeX() == Settings.LINE_NUMBER-1) {
 					nodeList.add(new Node(cn.getNodeX()-1, cn.getNodeY())); // up
-					if(cn.getNodeY()==0)
-					{					
+					
+					if(cn.getNodeY()==0) {					
+						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()+1)); // right			
+					} else if (cn.getNodeY()==Settings.COLUMN_NUMBER-1) {					
+						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); // left
+					} else {
 						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()+1)); // right
-						
-						
+						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); // left
 					}
-					else if (cn.getNodeY()==Settings.COLUMN_NUMBER-1)
-					{					
-						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); //left
-						
-					}
-					else
-					{
-						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()+1)); // right
-						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); //left
-					}
-				}
-				else
-				{
+				} else {
 					nodeList.add(new Node(cn.getNodeX()-1, cn.getNodeY())); // up
 					nodeList.add(new Node(cn.getNodeX()+1, cn.getNodeY())); // down
-					if(cn.getNodeY()==0)
-					{					
+					
+					if(cn.getNodeY()==0) {					
+						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()+1)); // right					
+					} else if (cn.getNodeY()==Settings.COLUMN_NUMBER-1) {					
+						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); // left
+					} else {
 						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()+1)); // right
-						
-						
-					}
-					else if (cn.getNodeY()==Settings.COLUMN_NUMBER-1)
-					{					
-						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); //left
-						
-					}
-					else
-					{
-						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()+1)); // right
-						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); //left
+						nodeList.add(new Node(cn.getNodeX(), cn.getNodeY()-1)); // left
 					}
 				}			
 				
-			}
-			else { // node has dirt
+			} else { // node has dirt
 				newPosX = cn.getNodeX();
 				newPosY = cn.getNodeY();
 				System.out.println(newPosX + ":" + newPosY);
@@ -147,6 +115,7 @@ public class Agent implements Runnable {
 			}
 		}
 	}
+	
 	/*
 	 * @input x, y
 	 * @return true if belief[x][y].size == 0
@@ -185,6 +154,7 @@ public class Agent implements Runnable {
 		
 		Element CurrentElement = belief[newPosX][newPosY];
 		if (CurrentElement.getSize() == 2) {
+
 			this.intension.add(pickup);
 			this.intension.add(drawup);
 		}
@@ -195,6 +165,7 @@ public class Agent implements Runnable {
 				}
 				else {  //diamond
 					this.intension.add(pickup);
+
 				}
 			}
 		}
@@ -213,13 +184,19 @@ public class Agent implements Runnable {
        	
        this.intension.clear();
        //intension = new ArrayList<Effector>();
+
 	}
 	
 	protected boolean goalTest () {
-		
 		return manor.isManorClean();
 	}
-
 	
-	
+	private void performanceMeasure() {
+		System.out.println("Number of actions : " + actionCount);
+		System.out.println("Energy lose : " + energy);
+		
+		if(actionCount == energy) { System.out.println("This agent is awesome"); }
+		else if ((energy - actionCount)<5) { System.out.println("This agent is pretty usefull"); }
+		else { System.out.println("This agent is useless"); }
+	}
 }

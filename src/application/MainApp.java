@@ -12,10 +12,10 @@ import javafx.stage.Stage;
 
 public class MainApp extends Application {
 	Group root;	
+	
 	@Override
 	public void start(Stage primaryStage) {
-        
-        root = new Group();
+		root = new Group();
         Scene scene = new Scene(root, Settings.W_WIDTH, Settings.W_HEIGHT);
         scene.setFill(Color.WHITE);
         primaryStage.setTitle(Settings.APP_NAME);
@@ -24,11 +24,13 @@ public class MainApp extends Application {
         Manor myManor = new Manor(); //create manor
         root.getChildren().add(myManor); 
         myManor.run(); // start manor's life
+        
         try {
 			Thread.sleep(3000); //sleep 1 second before start robot
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+        
         //robot's thread
         Thread robotThread = new Thread(new Agent(myManor));
         robotThread.start();           
@@ -36,7 +38,5 @@ public class MainApp extends Application {
 	
 	public static void main(String[] args) {
 		launch(args);
-
 	}
-
 }

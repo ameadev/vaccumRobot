@@ -17,10 +17,7 @@ public abstract class Effector {
 		}
 	}
 
-
 	// Call DrawUp, PickUp or Move for an eventually action
 	abstract void doAction();
-	
 	abstract void consumeEnergy ();
-	
 }

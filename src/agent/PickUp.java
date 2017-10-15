@@ -7,9 +7,7 @@ public class PickUp extends Effector {
 		consumeEnergy ();
 	}
 	
-	//
-	public void consumeEnergy ()
-	{
+	public void consumeEnergy() {
 		Agent.energy ++;
 		Agent.actionCount++;
 	}
