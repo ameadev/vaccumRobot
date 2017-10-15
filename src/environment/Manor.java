@@ -19,11 +19,13 @@ import javafx.util.Duration;
  */
 public class Manor extends Parent  {
 	
-	Element [][] rooms = new Element[Settings.LINE_NUMBER][Settings.COLUMN_NUMBER];
+	Element [][] rooms = new Element[Settings.COLUMN_NUMBER][Settings.LINE_NUMBER];
+	Element [][] emptyRooms = new Element[Settings.COLUMN_NUMBER][Settings.LINE_NUMBER];
 	
 	public Manor(){
 		
 		fillRooms();
+		emptyRooms = rooms;
 		showCard();
 	}
 	
@@ -35,12 +37,13 @@ public class Manor extends Parent  {
 			int component = new Random().nextInt(3); // element random choice (0: dust, 1: diamond, 2:nothing)
 			if (component != 2) // dust or diamond
 			{
-				if(!this.rooms[lineIndex][colIndex].getContent().contains(component)) //check content
+				if(!this.rooms[colIndex][lineIndex].getContent().contains(component)) //check content
 				{
-					this.rooms[lineIndex][colIndex].addContent(component);
+					this.rooms[colIndex][lineIndex].addContent(component);
 				}
 			}
-			//diplay rooms			
+			//diplay rooms		//this.showEmpty();
+			
 			this.showCard();
         }));
         timeline.setCycleCount(Animation.INDEFINITE);
@@ -51,9 +54,9 @@ public class Manor extends Parent  {
 	
 	protected void fillRooms()
 	{
-		for(int i = 0; i < Settings.LINE_NUMBER; i++)
+		for(int i = 0; i < Settings.COLUMN_NUMBER; i++)
 		{
-			for (int j = 0; j < Settings.COLUMN_NUMBER; j++)
+			for (int j = 0; j < Settings.LINE_NUMBER; j++)
 			{
 				Element myElement = new Element();
 				this.rooms[i][j] = myElement;
@@ -65,22 +68,24 @@ public class Manor extends Parent  {
 	 */
 	public void showCard()
 	{
-		
-		for(int line = 0; line < Settings.LINE_NUMBER; line++)
+		System.out.println("-----Manor-----");
+		this.getChildren().clear();
+		for(int col = 0; col < Settings.COLUMN_NUMBER; col++)
 		{
 			
-			for(int col = 0; col < Settings.COLUMN_NUMBER; col++)
+			for(int line = 0; line < Settings.LINE_NUMBER; line++)
 			{
-				Rectangle room = new Rectangle(Settings.W_WIDTH/Settings.LINE_NUMBER, Settings.W_HEIGHT/Settings.COLUMN_NUMBER);
-				room.setX(line * Settings.W_WIDTH/Settings.LINE_NUMBER);
-				room.setY(col * (Settings.W_HEIGHT/Settings.COLUMN_NUMBER));
+				System.out.print(rooms[col][line].getContent() + "-");
+				Rectangle room = new Rectangle(Settings.W_WIDTH/Settings.COLUMN_NUMBER, Settings.W_HEIGHT/Settings.LINE_NUMBER);
+				room.setX(col * Settings.W_WIDTH/Settings.COLUMN_NUMBER);
+				room.setY(line * (Settings.W_HEIGHT/Settings.LINE_NUMBER));
 				room.setFill(Color.TRANSPARENT);
 			    room.setStroke(Color.BLACK);		    
 			    this.getChildren().add(room);
 			    
-			    if(rooms[line][col].getSize() != 0) //cel has element
+			    if(rooms[col][line].getSize() != 0) //cel has element
 			    {
-			    	ArrayList<Integer> celContent = this.rooms[line][col].getContent();
+			    	ArrayList<Integer> celContent = this.rooms[col][line].getContent();
 			    	for(int i=0; i < celContent.size(); i++) //check element
 			    	{
 			    		if(celContent.get(i) == 0) //dust
@@ -94,6 +99,29 @@ public class Manor extends Parent  {
 			    	}
 			    } 		    
 			}
+			System.out.println("");
+							
+		}
+	}
+	public void showEmpty()
+	{
+		
+		for(int col = 0; col < Settings.COLUMN_NUMBER; col++)
+		{
+			
+			for(int line = 0; line < Settings.LINE_NUMBER; line++)
+			{
+				//System.out.print(rooms[col][line].getContent() + "-");
+				Rectangle room = new Rectangle(Settings.W_WIDTH/Settings.COLUMN_NUMBER, Settings.W_HEIGHT/Settings.LINE_NUMBER);
+				room.setX(col * Settings.W_WIDTH/Settings.COLUMN_NUMBER);
+				room.setY(line * (Settings.W_HEIGHT/Settings.LINE_NUMBER));
+				room.setFill(Color.TRANSPARENT);
+			    room.setStroke(Color.BLACK);		    
+			    this.getChildren().add(room);
+			    
+			    		    
+			}
+			
 							
 		}
 	} 
@@ -105,7 +133,7 @@ public class Manor extends Parent  {
 		Circle dust = new Circle();
 	    dust.setCenterX(posX + 20);
 	    dust.setCenterY(posY + 20);
-	    dust.setRadius(10);
+	    dust.setRadius(15);
 	    dust.setFill(Color.BLACK);
 	    this.getChildren().add(dust);
 	}
@@ -126,10 +154,10 @@ public class Manor extends Parent  {
 	 */
 	public boolean isManorClean()
 	{
-		for(int i = 0; i < Settings.LINE_NUMBER; i++)
+		for(int i = 0; i < Settings.COLUMN_NUMBER; i++)
 		{
 			
-			for(int j = 0; j < Settings.COLUMN_NUMBER; j++)
+			for(int j = 0; j < Settings.LINE_NUMBER; j++)
 			{
 				if (rooms[i][j].getSize() != 0) {return false;}
 			}
@@ -157,9 +185,13 @@ public class Manor extends Parent  {
 	 * @require colIndex < Settings.COL_NUMBER
 	 */
 	
-	public  void delRoomContent(int lineIndex, int colIndex)
+	public  void delRoomContent(int colIndex, int lineIndex)
 	{
-		this.rooms[lineIndex][colIndex].content.clear();
+		//this.rooms[colIndex][lineIndex].content.clear();
+		System.out.println(rooms[colIndex][lineIndex].getContent());
+		this.rooms[colIndex][lineIndex] = new Element();
+		System.out.println("del " + colIndex + ":" + lineIndex);
+		System.out.println(rooms[colIndex][lineIndex].getContent());
 		
 	}
 }

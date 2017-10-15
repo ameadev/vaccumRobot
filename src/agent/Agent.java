@@ -8,11 +8,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import application.Settings;
 import environment.Element;
 import environment.Manor;
-import environment.Map;
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.util.Duration;
+
 
 public class Agent implements Runnable {
 	
@@ -40,6 +36,7 @@ public class Agent implements Runnable {
 	public Agent(Manor myManor)
 	{
 		manor = myManor;
+		
 		//System.out.println(manor);
 	}
 	
@@ -55,9 +52,13 @@ public class Agent implements Runnable {
 				e.printStackTrace();
 			}
 			updateBelief(manor.getRooms());
-			updateIntension();
+			//System.out.println("update");
+			//updateIntension();
+			bfs();
+			//System.out.println("execution");
 			executeIntension();
 		}while(!this.goalTest());
+		System.out.println("mort");
 	}
 		
 	// Find a box that contain dust and/or diamond
@@ -190,8 +191,8 @@ public class Agent implements Runnable {
 			else if (Agent.posX > newPosX) { intension.add(left); }
 			else {} // Do nothing
 		
-			if (Agent.posY < newPosY) { intension.add(up); }
-			else if (Agent.posY > newPosY) { intension.add(down); }
+			if (Agent.posY < newPosY) { intension.add(down); }
+			else if (Agent.posY > newPosY) { intension.add(up); }
 			else {} // Do nothing
 		}
 		Element CurrentElement = belief[newPosX][newPosY];
@@ -201,7 +202,7 @@ public class Agent implements Runnable {
 		}
 		else {
 			if (CurrentElement.getContent().size() != 0) { 
-				if ( CurrentElement.getContent().get(0) == 0) { //dust
+				if ( CurrentElement.getContent().get(0).equals(0)) { //dust
 					intension.add(drawup);
 				}
 				else {  //diamond
@@ -213,13 +214,21 @@ public class Agent implements Runnable {
 	
 	//
 	protected void executeIntension () {
-		Iterator<Effector> exe = intension.iterator();
+		System.out.println(intension.size());
+		/*Iterator<Effector> exe = intension.iterator();
+		System.out.println(intension.size());
+		//manor.delRoomContent(newPosX, newPosY);
        	while(exe.hasNext()) {
+       		Effector ef = exe.next();
+       		System.out.println(ef);
+       		//manor.delRoomContent(newPosX, newPosY);
+       		//ef.doAction();
+       		//exe.next().doAction();
        		//System.out.println(exe.next());
-       		exe.next().doAction();
-       		//System.out.println(exe.next());
-       	}
-       	intension.clear();
+       	}*/
+		System.out.println("exe :" + newPosX + ":" + newPosY);
+		manor.delRoomContent(newPosX, newPosY);
+       	//intension.clear();
 	}
 	
 	protected boolean goalTest () {
