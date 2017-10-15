@@ -25,7 +25,7 @@ public class MainApp extends Application {
         root.getChildren().add(myManor); 
         myManor.run(); // start manor's life
         try {
-			Thread.sleep(1000); //sleep 1 second before start robot
+			Thread.sleep(3000); //sleep 1 second before start robot
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

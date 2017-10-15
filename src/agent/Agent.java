@@ -25,9 +25,9 @@ public class Agent implements Runnable {
 	private Element[][] content = new Element[Settings.LINE_NUMBER][Settings.COLUMN_NUMBER];
 	private Element[][] desire = new Element[Settings.LINE_NUMBER][Settings.COLUMN_NUMBER]; 
 	private ArrayList<Effector> intension = new ArrayList<Effector>() ;
-	private DrawUp drawup;
-	private PickUp pickup;
-	private Camera camera;
+	private DrawUp drawup = new DrawUp();
+	private PickUp pickup = new PickUp();
+	private Camera camera = new Camera();
 	private Move left = new Move("left");
 	private Move right = new Move("right");
 	private Move up = new Move("up");
@@ -46,7 +46,7 @@ public class Agent implements Runnable {
 	/************
 	 * Methodes *
 	 ************/
-	public void run() {	
+	public void run() {
 		do {
 			try {
 				Thread.sleep(Settings.ROBOT_DELAY);
@@ -57,25 +57,11 @@ public class Agent implements Runnable {
 			updateBelief(manor.getRooms());
 			updateIntension();
 			executeIntension();
-		}while(!this.goalTest());
-	}
+		}while (!this.goalTest());
 		
-	// Find a box that contain dust and/or diamond
-	private void exploreNotInformed () {
-		Element exist;
-		
-		for(int i = 0; i < Settings.LINE_NUMBER-1; i++) {
-			for (int j = 0; j < Settings.COLUMN_NUMBER-1; j++) {
-				exist = belief[i][i];
-				
-				if(exist.getSize() == 1 || exist.getSize() == 2) {
-					newPosX = j;
-					newPosY = i;
-				}
-				else {} // Do nothing
-			}
-		}
 	}
+	
+	//	
 	private void bfs()
 	{
 		
@@ -174,52 +160,59 @@ public class Agent implements Runnable {
 		for(int i = 0; i < Settings.LINE_NUMBER; i++) {
 			for (int j = 0; j < Settings.COLUMN_NUMBER; j++) {
 				belief[i][j] = manorRoom[i][j];
-				//System.out.println(manorRoom[i][j]);
 			}
 		}
 		
-		//belief = manor.getRooms();
 	}
 	
 	// Create a list of actions
 	protected void updateIntension () {
 		// Explore map and move to next task
 		bfs();
-		while (Agent.posX != newPosX && Agent.posY != newPosY) {
-			if (Agent.posX < newPosX) { intension.add(right); }
-			else if (Agent.posX > newPosX) { intension.add(left); }
+		int tempX = Agent.posX, tempY = Agent.posY;
+		while (tempX != newPosX && tempY != newPosY) {
+		//while (Agent.posX != newPosX && Agent.posY != newPosY) {
+			if (Agent.posX < newPosX) { this.intension.add(left); tempX++;  /*left.doAction();*/ }
+			else if (Agent.posX > newPosX) { this.intension.add(right); tempX--; /*right.doAction();*/ }
+			else {} // Do nothing
+		    
+			if (Agent.posY < newPosY) { this.intension.add(down); tempY++; /*down.doAction();*/ }
+			else if (Agent.posY > newPosY) { this.intension.add(up); tempY--; /*up.doAction();*/ }
 			else {} // Do nothing
 		
-			if (Agent.posY < newPosY) { intension.add(up); }
-			else if (Agent.posY > newPosY) { intension.add(down); }
-			else {} // Do nothing
+		System.out.println("lol dans while");
 		}
+		
 		Element CurrentElement = belief[newPosX][newPosY];
 		if (CurrentElement.getSize() == 2) {
-			intension.add(pickup);
-			intension.add(drawup);
+			this.intension.add(pickup);
+			this.intension.add(drawup);
 		}
 		else {
 			if (CurrentElement.getContent().size() != 0) { 
-				if ( CurrentElement.getContent().get(0) == 0) { //dust
+				if ( CurrentElement.getContent().get(0) == 0) { //dust  MAJ
 					intension.add(drawup);
 				}
 				else {  //diamond
-					intension.add(pickup);
+					this.intension.add(pickup);
 				}
 			}
 		}
 	}
 	
+	
 	//
 	protected void executeIntension () {
-		Iterator<Effector> exe = intension.iterator();
-       	while(exe.hasNext()) {
-       		//System.out.println(exe.next());
-       		exe.next().doAction();
-       		//System.out.println(exe.next());
+	
+		int tt = this.intension.size();
+		System.out.println("taille de intension "+tt);
+       	for(int k=0; k < tt; k++) 
+       	{       		
+       		this.intension.get(k).doAction();       		
        	}
-       	intension.clear();
+       	
+       this.intension.clear();
+       //intension = new ArrayList<Effector>();
 	}
 	
 	protected boolean goalTest () {

@@ -17,10 +17,10 @@ public class Move extends Effector {
          case "left":  Agent.posX +=1; 
                        consumeEnergy ();
                        break;
-         case "up":    Agent.posY +=1; 
+         case "up":    Agent.posY -=1; 
                        consumeEnergy ();
                        break;  
-         case "down":  Agent.posY -=1;
+         case "down":  Agent.posY +=1;
                        consumeEnergy ();
                        break; 
          default: 
