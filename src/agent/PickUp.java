@@ -3,7 +3,8 @@ package agent;
 
 public class PickUp extends Effector {
 	public void doAction() {
-		Agent.manor.delRoomContent(Agent.posX,Agent.posY);
+		System.out.println("pickup " +Agent.newPosX + ":" + Agent.newPosY);
+		Agent.manor.delRoomContent(Agent.newPosX,Agent.newPosY);
 		consumeEnergy ();
 	}
 	

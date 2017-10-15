@@ -5,7 +5,8 @@ import environment.Element;
 public class DrawUp extends Effector {
 	
 	public void doAction () {
-		Agent.manor.delRoomContent(Agent.posX,Agent.posY);
+		System.out.println("Drowup " +Agent.newPosX + ":" + Agent.newPosY);
+		Agent.manor.delRoomContent(Agent.newPosX,Agent.newPosY);
 		consumeEnergy();
 	}
 	

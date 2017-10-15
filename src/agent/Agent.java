@@ -149,7 +149,6 @@ public class Agent implements Runnable {
 			else if (Agent.posY > newPosY) { this.intension.add(up); tempY--; /*up.doAction();*/ }
 			else {} // Do nothing
 		
-		System.out.println("lol dans while");
 		}
 		
 		Element CurrentElement = belief[newPosX][newPosY];
