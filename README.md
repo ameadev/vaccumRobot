@@ -1,6 +1,5 @@
 # VaccumRobot
 
-[VaccumRobot](#vaccumrobot)
   - [Intro](#intro)
   - [Just tell me what to do](#just-tell-me-what-to-do)  
   - [Autors](#autors)
