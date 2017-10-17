@@ -16,13 +16,16 @@ Programmation of an Agent who can draw dust, pick up jewellery or move in an env
 
 1. Fork the project via `github`
 1. Clone the project `git clone https://github.com/ameadev/vaccumRobot.git`
-1. Open it with Eclipse
+1. Open it with Eclipse or execute jar file in build directory 
+   java -jar vacuumRobot.jar 1 to explore with BFS algorithm
+   java -jar vacummTobot.jar 2 to explore with Greedy Search algorithm
 1. Enjoy !
 
 ## Autors
 
 -	Mewena AWESSO  AWEM06098706
 -	Clément RENDU  RENC02069500
+-	Nyemo Kodjovi  KOUMADI KOUK08118208
 
 ## Licence
 
