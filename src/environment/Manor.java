@@ -18,6 +18,7 @@ import javafx.util.Duration;
 
 public class Manor extends Parent {
 	Element [][] rooms = new Element[Settings.LINE_NUMBER][Settings.COLUMN_NUMBER];
+	protected int performanceEnergy = 0;
 
 	
 	public Manor() {
@@ -167,14 +168,32 @@ public class Manor extends Parent {
 	 */
 
 	
-	public  void delRoomContent(int colIndex, int lineIndex)
+	public  void delRoomContent(int colIndex, int lineIndex, Element el)
 	{
 		//this.rooms[colIndex][lineIndex].content.clear();
+		//verification if content element don't change
+		int contentSize = this.rooms[colIndex][lineIndex].getContent().size();
+		if ((contentSize > 1) && (!this.rooms[colIndex][lineIndex].getContent().equals(el)))
+		{
+			this.performanceEnergy +=2;
+		}
+		else 
+		{
+			this.performanceEnergy ++;
+		}
+				
 		System.out.println(rooms[colIndex][lineIndex].getContent());
 		this.rooms[colIndex][lineIndex] = new Element();
 		System.out.println("del " + colIndex + ":" + lineIndex);
 		System.out.println(rooms[colIndex][lineIndex].getContent());
 
-		
 	}
+	
+	//performance measure
+	public double performanceMeasure(int agentEnergy) 
+	{
+		return (double)agentEnergy/(double)this.performanceEnergy;
+	}
+	
+	
 }

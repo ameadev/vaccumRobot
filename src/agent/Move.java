@@ -28,7 +28,6 @@ public class Move extends Effector {
 	}
 	
 	public void consumeEnergy() {
-		Agent.energy ++;
 		Agent.actionCount++;
 	}
 }
