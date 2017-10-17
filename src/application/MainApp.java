@@ -65,10 +65,12 @@ public class MainApp extends Application {
 			algoChoice = Integer.parseInt(args[0]);
 			if (Integer.parseInt(args[0]) == 1)
 			{
+				Settings.APP_NAME = Settings.APP_NAME+" - Exploration non informée - BFS";
 				launch(args);
 			}
 			else if (Integer.parseInt(args[0]) == 2)
 			{
+				Settings.APP_NAME = Settings.APP_NAME+" - Exploration informée - Greedy Search";
 				launch(args);
 			}
 			else 
